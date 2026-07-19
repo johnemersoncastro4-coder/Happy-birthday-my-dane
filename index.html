@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love! ❤️</title>
+    <style>
+        /* --- Google Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        /* --- Global Custom Properties (Easy to customize colors here) --- */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 50%, #f9bec7 100%);
+            --primary-color: #ff4d6d;
+            --primary-hover: #ff758f;
+            --text-color: #4a4a4a;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --shadow: 0 10px 30px rgba(255, 77, 109, 0.15);
+            --font-romantic: 'Dancing Script', cursive;
+            --font-sans: 'Poppins', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- Background Floating Hearts Effect --- */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -50px;
+            color: var(--primary-color);
+            opacity: 0.6;
+            font-size: 20px;
+            animation: floatUp 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(360deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* --- Audio Controls UI --- */
+        .audio-control-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .audio-control-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* --- Base Page Navigation Setup --- */
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            z-index: 1;
+            text-align: center;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- General Button Styling --- */
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            font-family: var(--font-sans);
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.3);
+        }
+
+        /* --- PAGE 1: Welcome Screen --- */
+        .welcome-title {
+            font-family: var(--font-romantic);
+            font-size: 4.5rem;
+            color: var(--primary-color);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* --- PAGE 2: Birthday Card --- */
+        .card-container {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .card-title {
+            font-family: var(--font-romantic);
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* --- Modal / Popup Styling --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 25px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-text {
+            font-family: var(--font-romantic);
+            font-size: 2rem;
+            line-height: 1.5;
+            color: #5c3d46;
+            white-space: pre-line; /* Preserves line breaks in message */
+        }
+
+        /* --- PAGE 3: Memories Gallery --- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .gallery-item {
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03) rotate(1deg);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .caption {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .video-container {
+            margin: 30px auto;
+            max-width: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background: var(--card-bg);
+            padding: 10px;
+        }
+
+        .video-container video {
+            width: 100%;
+            border-radius: 10px;
+            display: block;
+        }
+
+        /* --- Final Romantic Message Section --- */
+        .ending-message {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px dashed var(--primary-color);
+            font-family: var(--font-romantic);
+            font-size: 2.2rem;
+            line-height: 1.4;
+            color: var(--primary-color);
+        }
+
+        /* --- Responsive Tweaks --- */
+        @media (max-width: 600px) {
+            .welcome-title { font-size: 3rem; }
+            .card-title { font-size: 2.2rem; }
+            .modal-text { font-size: 1.6rem; }
+            .ending-message { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Hearts Setup -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- Hidden Background Audio Element -->
+    <audio id="bgMusic" loop>
+        <source src="music/happybirthday.mp3" type="audio/mpeg">
+    </audio>
+
+   
+    <button class="audio-control-btn" id="musicBtn" onclick="toggleMusic()">
+        <span id="musicIcon">🎵</span> <span id="musicText">Play Music</span>
+    </button>
+
+   
+    <div class="page active" id="page1">
+        <h1 class="welcome-title">Happy Birthday, My Love! ❤️</h1>
+        <p class="welcome-subtitle">A little digital universe built just for you.</p>
+        <button class="btn" onclick="navigateToPage(2)">Step Inside ✨</button>
+    </div>
+
+  
+    <div class="page" id="page2">
+        <div class="card-container">
+            <h2 class="card-title">To Someone Extremely Special...</h2>
+            <p style="margin-bottom: 15px;">Today is entirely about celebrating the absolute best person in the world.</p>
+            <button class="btn" onclick="toggleModal(true)">Open My Message 💖</button>
+            <br>
+            <button class="btn" onclick="navigateToPage(3)" style="background: transparent; color: var(--primary-color); border: 2px solid var(--primary-color); box-shadow: none;">See Our Memories →</button>
+        </div>
+    </div>
+
+    <!-- Heartfelt Message Modal/Popup Envelope -->
+    <div class="modal-overlay" id="messageModal">
+        <div class="modal-content">
+            <!-- CUSTOMIZE YOUR DEEPER LOVE NOTE HERE -->
+            <p class="modal-text">My Dearest,
+
+            Every single day with you feels like an absolute gift. You bring so much light, laughter, and warmth into my world. 
+
+            I hope today brings you as much happiness as you constantly give to everyone around you. You deserve the entire universe.
+
+            Happy Birthday! 🎉</p>
+            <button class="btn" onclick="toggleModal(false)" style="margin-top: 30px;">Close 💖</button>
+        </div>
+    </div>
+
+    <!-- ================= PAGE 3: MEMORIES GALLERY ================= -->
+    <div class="page" id="page3">
+        <h2 class="card-title" style="font-size: 3.5rem;">Our Beautiful Memories</h2>
+        <p>A few moments of us that I'll hold onto forever.</p>
+
+        <!-- Image Gallery Grid (Replace src filenames below as needed) -->
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="c:\Users\Emerson Castro\Downloads\3ebe6f69-020c-469a-8d82-d9c8e3c73f9b.jpg" alt="Memory 1" onerror="this.style.display='none'; this.nextElementSibling.innerText='[Drop photo1.jpg here]'">
+                <p class="caption">The first time I completely fell for your smile. ✨</p>
+            </div>
+            <div class="gallery-item">
+                <img src="c:\Users\Emerson Castro\Downloads\++++++++++++++++++++++++++++.jpg" alt="Memory 2" onerror="this.style.display='none'; this.nextElementSibling.innerText='[Drop photo2.jpg here]'">
+                <p class="caption">One of my absolute favorite days with you. 📸</p>
+            </div>
+            <div class="gallery-item">
+                <img src="c:\Users\Emerson Castro\Downloads\++++++++++++++++.jpg" alt="Memory 3" onerror="this.style.display='none'; this.nextElementSibling.innerText='[Drop photo3.jpg here]'">
+                <p class="caption">Laughing uncontrollably next to you. ❤️</p>
+            </div>
+            <div class="gallery-item">
+                <img src="c:\Users\Emerson Castro\Downloads\412d5c9b-84dc-4733-82c6-c175e079f7b1.jpg" alt="Memory 4" onerror="this.style.display='none'; this.nextElementSibling.innerText='[Drop photo4.jpg here]'">
+                <p class="caption">Every moment is better when you're there. 🌹</p>
+            </div>
+        </div>
+
+        
+        <div class="video-container" id="videoWrapper">
+            <video controls id="birthdayVideo">
+                <source src="c:\Users\Emerson Castro\Downloads\0607.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p class="caption" style="padding-bottom: 5px;">A little clip to remember 🎥</p>
+        </div>
+
+        <!-- Final Emotional Text Footer -->
+        <footer class="ending-message">
+            "Happy Birthday, My Love. Thank you for being the most beautiful part of my life. No matter where life takes us, I'll always be here loving you. I love you so much. ❤️"
+        </footer>
+    </div>
+
+    <!-- --- JavaScript Interactions --- -->
+    <script>
+        // 1. Navigation Flow Controller
+        function navigateToPage(pageNumber) {
+            // Remove active status from all views
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // Show target page
+            document.getElementById(`page${pageNumber}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Attempt to trigger music when user initiates page transitions 
+            // (Workaround for strict modern browser autoplay restrictions)
+            const audio = document.getElementById('bgMusic');
+            if (audio.paused && musicText.innerText === "Play Music") {
+                audio.play().then(() => {
+                    updateMusicUI(true);
+                }).catch(() => { /* Silent catch if still locked */ });
+            }
+        }
+
+        // 2. Card Message Modal Toggler
+        function toggleModal(show) {
+            const modal = document.getElementById('messageModal');
+            if (show) {
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
+
+        // 3. Audio Manager
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    updateMusicUI(true);
+                }).catch(err => {
+                    alert("Audio couldn't load yet. Please double check that your file path matches music/happybirthday.mp3 exactly!");
+                });
+            } else {
+                audio.pause();
+                updateMusicUI(false);
+            }
+        }
+
+        function updateMusicUI(isPlaying) {
+            if (isPlaying) {
+                musicIcon.innerText = "⏸️";
+                musicText.innerText = "Pause Music";
+            } else {
+                musicIcon.innerText = "🎵";
+                musicText.innerText = "Play Music";
+            }
+        }
+
+        // 4. Background CSS CSS Floating Hearts Engine
+        function createHeart() {
+            const container = document.getElementById('heartsContainer');
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            
+            // Randomize looks and horizontal spreads
+            heart.innerText = ['❤️', '💖', '💝', '💕', '🌸'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 4 + 6) + 's'; // Spawns speeds between 6s-10s
+            heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+            
+            container.appendChild(heart);
+
+            // Housekeeping: remove old items out of view to maintain smooth hardware performance
+            setTimeout(() => {
+                heart.remove();
+            }, 10000);
+        }
+
+        // Build continuous aesthetic flow
+        setInterval(createHeart, 400);
+
+        // 5. Smart Video Presence Fallback
+        const videoElement = document.getElementById('birthdayVideo');
+        const videoWrapper = document.getElementById('videoWrapper');
+        
+        videoElement.addEventListener('error', function() {
+            // If resource is missing or throws an error, hide the video component completely
+            videoWrapper.style.display = 'none';
+        }, true);
+    </script>
+</body>
+</html>
